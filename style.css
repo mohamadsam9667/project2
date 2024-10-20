@@ -1,150 +1,53 @@
-/*body{
-    background-color: red;
-}*/
-@font-face {
-    font-family: 'lalezar';
-    src: url(../project1/font/lalezar.ttf);
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+background-color: rgb(204, 204, 205)
 }
-body{
-    margin: auto;
-}
-.blla{
-    width: 100%;
-    height: 70px;
-    background-color: white;
-    position: relative;
-    box-shadow: 0px 0px 10px black ;
-}
- .left1{
-    height: 100%;
-    width: 50%;
-    position: absolute;
-    left: 0;
-    background-color: white;
-}
- .right1{
-    height: 100%;
-    width: 50%;
-    background-color:white;
-    position: absolute;
-    right: 0;
-}
-.selection1{
-    height: 630px;
-    background-color: #282828;
-    position: relative;
-}
-.left0{
-    position: absolute;
-    left: 5px;
-    
-}
-.list{
-    font-size: 15px;
-    display: inline-block;
-    position: absolute;
-    left: 20px;
-    padding: 15px 10px;
-}
-.list .li{
-    display: inline-block;
-    padding: 10px;
-    font-weight: bold;
-}
-.right1 .name{
-    display: inline-block;
-  position: absolute;
-  right: 5px;
-  color:white ;
-  border: 2px solid green;
-   background-color: rgb(43, 177, 43) ;
-  height: 30px;
-   border-radius: 20%;
-   width: 120px;
-   text-align: center;
-   
-}
-.menue-righte{
-    
-    font-size: 15px;    
-    position: absolute;
-    right: 10px;
-    
-   
-}
-.li-right{
-    
-    display: inline-block;
-    padding: 20px;
-    font-weight: bold;
 
+.father{
+  background: linear-gradient(45deg, blue, red);
+  /* background-color:   linear-gradient(4deg, blue, red); */
+  display: flex;
+  /* margin: auto; */
+  /* left: 20%; */
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+  height: 500px;
+  /* padding: 5%;*/
+  margin: 40% 10%;
+  border: solid 2px rgba(0, 0, 0, 0.441);
+  box-shadow:  3px 1px 3px 5px  ;
 }
-.left{
-    width: 50%;
-    height: 82%;
-    position: absolute;
-    left: 0px;
-    text-align: center;
-    padding-top: 100px;
-}
+
 .title{
-    font-size: 90px;
-    font-weight: bold;
-    color: #fff;
+  
+  display: flex;
+  width: 60%;
+  font-size: 1.2rem;
+  justify-content: center;
+  padding: 5%;
+  /* text-align: center; */
+  background: linear-gradient(45deg,rgb(238, 255, 0),rgb(255, 47, 0));
+  border: 2px solid black;
+  
+  
+}
 
+.btn{
+  width: 60%;
+  font-size: 3rem;
+display: flex;
+padding: 5%;
+justify-content: center;
+background: #000; 
+color: aliceblue;
+border: 1px solid white;
 }
-.bio{
- font-size: 20px;
- color: black;
- font-weight: bold;
+.btn:hover{
+color: #000;
+background: white;
 
-}
-.btn1 ,.btn2{
-    width: 300px;
-    padding: 10px;
-    margin: 10px auto;
-    border-radius: 30px;
-
-}
-.btn1{
-    background-color: #04aa6d;
-}
-.btn2{
-    background-color: white;
-}
-.right{
-    width: 50%;
-    height: 100%;
-    background-color: #282828;
-    position: absolute;
-    right: 0px;
-}
-.counteiner{
-    width: 650px;
-    height: 400px;
-    background-color:rgb(233, 234, 236);
-    margin: 100px auto;
-    border-radius: 2%;
-}
-.litel{
-    padding: 10px;
-}
-.code{
-    width: 600px;
-    height: 270px;
-    background-color: #fff;
-    margin: 10px auto;
-    padding: 10px;
-    border-left:4px solid #04aa6d;
-}
-.btn3{
-    width: 120px;
-    height: 25px;
-    background-color: #04aa6d;
-    border-radius: 25px;
-    position: absolute;
-    font-weight:bold ;
-    left: 30px;
-    text-align: center;
-
+transition: all 1s;
 }
