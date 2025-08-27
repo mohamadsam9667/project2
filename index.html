@@ -1,24 +1,333 @@
-<!DOCTYPE html>
-<html lang="en">
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="style.css">
+  <title>رزومه حرفه‌ای</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'vazir', Arial, sans-serif;
+      background-color: #f0e7ff;
+      color: white;
+      transition: all 0.3s ease;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #3C2F5F;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1s ease-in;
+    }
+    .profile {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #BB86FC;
+      transition: transform 0.3s;
+    }
+    .profile-img:hover {
+      transform: scale(1.05);
+    }
+    h1 {
+      color: #BB86FC;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    h2 {
+      color: #BB86FC;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #bb86fc;
+      padding-bottom: 5px;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .section p, .section li {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style: none;
+      padding-right: 20px;
+    }
+    ul li::before {
+      
+      content: '✔';
+      color: #e0cdf8;
+      margin-left: 10px;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 12px 20px;
+      background: #141414;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s;
+    }
+    .theme-toggle:hover {
+      background: #8e24aa;
+    }
+    .signature-section {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #bb86fc;
+    }
+    .signature-img {
+      max-width: 200px;
+      height: auto;
+      transition: transform 0.3s;
+      border-radius: 100px;
+    }
+    .signature-img:hover {
+      transform: scale(1.05);
+    }
+    /* Dark Mode */
+    body.dark-mode {
+      background: #2d1b4e;
+      color: #e0d6ff;
+    }
+    body.dark-mode .container {
+      background: #3c2f5f;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+    body.dark-mode h1, body.dark-mode h2 {
+      color: #bb86fc;
+    }
+    body.dark-mode h2 {
+      border-bottom-color: #9f4aff;
+    }
+    body.dark-mode .profile-img {
+      border-color: #bb86fc;
+    }
+    body.dark-mode .theme-toggle {
+      background: #bb86fc;
+    }
+    body.dark-mode .theme-toggle:hover {
+      background: #9f4aff;
+    }
+    body.dark-mode ul li::before {
+      color: #bb86fc;
+    }
+    body.dark-mode .signature-section {
+      border-top-color: #9f4aff;
+    }
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+      h1 { font-size: 2em; }
+      h2 { font-size: 1.5em; }
+      .profile-img { width: 120px; height: 120px; }
+      .signature-img { max-width: 150px; }
+    }
+  </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">تم تیره</button>
+  <div class="container">
+    <div class="profile">
+      <img src="image/aria.png" alt="عکس پروفایل" class="profile-img">
+      <h1>محمدمهدی رضایی </h1>
+      <p>محمدمهدی رضایی، متولد ۲۸ خرداد ۱۳۷۹ در سنندج، وکیل پایه یک دادگستری با شماره پروانه حقوقی ۱۳۶۴۸۰ ، استادیار دانشگاه و پژوهشگر حقوق، حسابرسی و مالیات است.</p>
+    </div>
+    <div class="section">
+      <h2>درباره من</h2>
+      <p>محمد مهدی رضایی متولد ۲۸ خرداد ۱۳۷۹ در سنندج، وکیل پایه یک دادگستری (شماره پروانه ۱۳۶۴۸۰)، استادیار دانشگاه و پژوهشگر در حوزه حقوق، حسابرسی و مالیات است.   
+        وی دارای مدرک کارشناسی حقوق از دانشگاه علامه طباطبایی و کارشناسی ارشد حقوق با گرایش حسابرسی از دانشگاه بین‌الملل امام خمینی می‌باشد و هم‌اکنون دانشجوی دکترای حقوق و رئیس نماینده دانشجویان دانشکده علوم اجتماعی است.
+        دکتر رضایی همچنین دارنده مدارک مشاور رسمی مالیاتی و کارشناس دادگستری با حق تعهد ۵ ساله در حوزه حسابرسی است. او تجربه گسترده‌ای در زمینه مشاوره حقوقی، مالیاتی و حسابرسی دارد و فعالیت‌های علمی و پژوهشی‌اش در حوزه حقوق مالی و اقتصادی، وی را به یکی از متخصصان برجسته و اثرگذار این عرصه تبدیل کرده است</p>
+    </div>
+    <div class="section">
+      <h2>اطلاعات تماس</h2>
+      <!-- <p>ایمیل: [ایمیل شما]</p> -->
+      <p>تلفن: 09331823707</p>
+      <p>تلگرام: <a href="https://t.me/AS_APEX" target="_blank" style="color: #BB86FC;">[لینک پروفایل]</a></p>
+    </div>
+    <div class="section">
+      <h2>تحصیلات</h2>
+      <p>کارشناسی از دانشگاه علامه طباطبایی</p>
+      <p>کارشناسی ارشد حسابرسی از دانشگاه بین المللی امام خمینی </p>
+      <p>دانشجوی دکترای حقوق کیفری از دانشگاه بین المللی امام خمینی</p>
+    </div>
+    <div class="section">
+      <h2>مقالات علمی <h2>
+      <ul>
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          1. بررسی اثر همزمانی استانداردهای حسابرسی بین‌المللی و مقررات مالیاتی بر شفافیت گزارشگری مالی شرکت‌های چندملیتی
+        </li>
+
+        <li style="font-size: 15px; color: #f3d9f6;;">
+
+          2. تحلیل حقوقی مسئولیت مدنی و کیفری حسابرسان در افشای ناقص یا نادرست اطلاعات مالی
+        </li>
+
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          3. ارزیابی نقش حسابرسی قانونی در جلوگیری از تخلفات مالی و ارتقای حاکمیت شرکتی
+         
+        </li>
+
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          4. مطالعه تطبیقی اصول حسابرسی و قوانین تجاری در تضمین سلامت اطلاعات مالی شرکت‌های بورسی 
+        </li>
+
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          5. چارچوب حقوقی و حسابرسی برای شناسایی و پیشگیری از تقلب مالی در مؤسسات مالی و اعتباری
+        </li>
 
 
-<div class="father">
-  <h1 class="title">غذا </h1>
-  <br><br><br><br>
-  <button class="btn">کلیک کن </button>
-</div>
-  
-  
-  
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          6. اثر استانداردهای گزارشگری مالی بر الزام به شفافیت و پاسخگویی حقوقی مدیران شرکت‌ها
+        </li>
 
 
-  <script src="app.js"></script>
+        
+        <li style="font-size: 15px; color: #f3d9f6;;">
+          7.اثر همگرایی حسابرسی و مقررات حقوقی بر کاهش ریسک قانونی و مالی در شرکت‌های چندملیتی
+        </li>
+
+      </ul>
+
+
+    </div>
+    <div class="section">
+      <h2>تجربیات کاری</h2>
+      <p><strong style="content: '✔';
+        color: #e0cdf8;
+        margin-left: 10px;">🟣</strong>وکیل مالیاتی و حسابرس حرفه‌ای با بیش از ۷ سال تجربه در حوزه‌های حقوق و حسابرسی حقوقی</p>
+     
+     
+     <p>
+    <strong
+       style="content: '✔';
+      color: #e0cdf8;
+      margin-left: 10px;">🟣</strong>
+
+        ۳ سال تجربه تخصصی در وکالت مالیاتی
+    
+      </p> 
+   
+ <p>
+    <strong
+       style="content: '✔';
+      color: #e0cdf8;
+      margin-left: 10px;">🟣</strong>
+      
+      ۴ سال تجربه به‌عنوان ممیز در کانون وکلای دادگستری تهران
+    
+      </p> 
+   
+
+
+      <p>
+        <strong
+           style="content: '✔';
+          color: #e0cdf8;
+          margin-left: 10px;">🟣</strong>
+          
+          فعال در انجمن‌ها و شبکه‌های حرفه‌ای حقوقی و مالیاتی
+          </p> 
+
+
+
+     <p>
+      <strong
+
+     color: #e0cdf8;
+     margin-left: 10px;">🟣</strong>
+
+      تخصص در مشاوره حقوقی، حسابرسی و مقررات مالیاتی
+     
+      <strong
+
+     color: #e0cdf8;
+     margin-left: 10px;"></strong>
+
+    </p>
+    
+    
+    </div>
+
+
+    
+    <div class="signature-section">
+      <h2>امضا</h2>
+      <a href="https://ikiu.ac.ir/">
+        <img src="image/آریا امضا.png" alt="امضای شما" class="signature-img">
+      </a>
+      
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const button = document.querySelector('.theme-toggle');
+      button.textContent = document.body.classList.contains('dark-mode') ? 'تم روشن' : 'تم تیره';
+    }
+  </script>
 </body>
 </html>
